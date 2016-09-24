@@ -29,6 +29,6 @@ const safeMultiplyBy2=R.cond([
                               [R.T , R.always(Either.Left(NOT_AN_INT))]
                              ])
 // operation :: string -> any
-const operation = R.pipe(JSON.parse,getName,safeLength,R.map(R.inc),R.chain(safeMultiplyBy2),getValue)
+const operation = R.pipe(JSON.parse, getName, safeLength, R.map(R.inc), R.chain(safeMultiplyBy2), getValue)
 
 console.log(operation(stringData))
