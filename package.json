@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "standard --fix -w *.js",
+    "start": "node server"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "ramda": "^0.22.1",
-    "ramda-fantasy": "^0.7.0"
+    "ramda-fantasy": "^0.7.0",
+    "standard": "^8.3.0"
   }
 }
