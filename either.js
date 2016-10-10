@@ -51,8 +51,7 @@ Either.try = function (func) {
     try {
       return new Success(func.apply(null, arguments))
     } catch (exception) {
-            console.log((new Error(exception)).stack)
-      return new Failure(new Error(exception))
+      return new Failure(exception)
     }
   }
 }

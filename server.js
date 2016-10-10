@@ -1,8 +1,7 @@
 const R = require('ramda')
 const Either = require('./either')
 const data = require('./data')
-const stringData = (data)
-
+const stringData = JSON.stringify(data)
 const STRING_CANNOT_B_EMPTY = require('./Exception').STRING_CANNOT_B_EMPTY
 const NOT_AN_INT = require('./Exception').NOT_AN_INT
 
@@ -26,17 +25,30 @@ const safeLength = R.cond([
 
 // safeMultiplyBy2::integer -> Either Failure integer
 const safeMultiplyBy2 = R.cond([
-                              [isNumber, R.pipe(R.multiply(2), Either.Success)],
+                              [isNumber, R.pipe(R.multiply(2),Either.Success)],
                               [R.T, R.always(Either.Failure(NOT_AN_INT))]
 ])
-// operation :: string -> any
 
-var tap = function (value) {
+// tap :: a' -> a'
+const tap = function (value) {
   console.log(value)
   return value
 }
 
-var safeParse = Either.try(JSON.parse)
+const handleError = function (eitherObject) {
+  if (eitherObject.isFailure) {
+    console.log('Failed:  ' + eitherObject.value)
+    if (eitherObject.value instanceof Error)
+      console.log('Stack:  ' + eitherObject.value.stack)
+    return ;
+  }
+   console.log('success:  ',  eitherObject.value)
+  return getValue(eitherObject)
+}
 
-const operation = R.pipe(safeParse, tap, R.map(getName), tap, R.chain(safeLength), tap, R.chain(R.inc), tap, R.chain(safeMultiplyBy2), getValue)
+const safeParse = Either.try(JSON.parse)
+
+// operation :: string -> any
+//const operation = R.pipe(safeParse,R.map(getName),tap, R.chain(safeLength),tap,R.chain(R.inc),tap,  R.chain(safeMultiplyBy2),tap, handleError)
+const operation = R.pipe(safeParse,R.map(getName),R.chain(safeLength), R.map(R.inc),R.chain(safeMultiplyBy2), handleError)
 console.log(operation(stringData))

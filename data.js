@@ -1,4 +1,4 @@
-var toExport = JSON.stringify({ name: '' })
+var toExport = { name: 'Selva' }
 
-//module.exports = toExport
-module.exports = new Error('test')
+module.exports = toExport
+// module.exports = new Error('test')
