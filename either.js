@@ -3,8 +3,9 @@
 var noop = function () { return this }
 var cloneObject = Object.create
 
+
 // Constructors
-function Either () {}
+var Either =  {}
 
 function Success (value) {
   this.value = value
@@ -17,8 +18,12 @@ function Failure (value) {
 Success.prototype = cloneObject(Either)
 Failure.prototype = cloneObject(Either)
 
+Success.prototype.constructor = Success
+Failure.prototype.constructor = Failure
+
 Either.of = value => new Success(value)
-Either.prototype.of = Either.of
+
+Either.empty = value => new Success([])
 
 Success.of = value => new Success(value)
 Success.prototype.of = Success.of
@@ -30,8 +35,8 @@ Either.Success = value => new Success(value)
 Either.Failure = value => new Failure(value)
 
 // Predicates
-Either.prototype.isSuccess = false
-Either.prototype.isFailure = false
+Either.isSuccess = false
+Either.isFailure = false
 
 Success.prototype.isSuccess = true
 Failure.prototype.isFailure = true
@@ -56,4 +61,23 @@ Either.try = function (func) {
   }
 }
 
+function concat(one,two){
+   return Array.isArray(one)? one.concat(two) : [one].concat(two)
+}
+
+Either.concat = Success.prototype.concat = Failure.prototype.concat = function (toConcat) {
+  if (toConcat.isFailure && this.isFailure) {
+    return new Failure(concat(this.value,toConcat.value))
+  }
+  else if(this.isSuccess && toConcat.isSuccess){
+    return new Success(concat(this.value,toConcat.value))
+  }
+  else if(this.isFailure && toConcat.isSuccess){
+    return new Failure(this.value)
+  }
+  else {
+    return new Failure(toConcat.value)
+  }
+}
 module.exports = Either
+

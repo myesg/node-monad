@@ -49,5 +49,5 @@ const handleError = function (eitherObject) {
 const safeParse = Either.try(JSON.parse)
 
 // operation :: string -> any
-const operation = R.pipe(safeParse, R.map(getName), R.chain(safeLength), tap, R.map(R.inc), R.chain(safeMultiplyBy2), handleError)
+const operation = R.pipe(safeParse, R.map(getName), R.chain(safeLength), R.map(R.inc), R.chain(safeMultiplyBy2), handleError)
 console.log(operation(stringData))
